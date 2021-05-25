@@ -1,7 +1,9 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:my_app/authentication_service.dart';
 import 'package:slider_button/slider_button.dart';
+import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
 
@@ -23,7 +25,7 @@ class Account extends StatelessWidget {
             delegate: SliverChildListDelegate(
               [
                 buildSummary(),
-                buildLogoutButton(),
+                buildLogoutButton(context),
                 buildBoldText("Your vehicle list"),
                 buildVehicleList(),
               ]
@@ -152,12 +154,12 @@ class Account extends StatelessWidget {
     );
   }
 
-  buildLogoutButton() {
+  buildLogoutButton(BuildContext context) {
     return Container(
       child: Center(
         child: SliderButton(
           action: () {
-            
+            context.read<AuthenticationService>().signOut();
           },
           label: Text("Slide for logout"),
           vibrationFlag: false,
