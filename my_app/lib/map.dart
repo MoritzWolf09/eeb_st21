@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
 import 'package:motion_tab_bar/MotionTabBarView.dart';
 import 'package:motion_tab_bar/MotionTabController.dart';
 import 'package:motion_tab_bar/motiontabbar.dart';
-import 'package:easy_dialog/easy_dialog.dart';
 import 'package:my_app/account.dart';
+import 'package:my_app/vehicle_overview.dart';
 
 class Map extends StatelessWidget {
   @override
@@ -39,7 +37,7 @@ class _MapStatefulWidgetState extends State<MapStatefulWidget> with TickerProvid
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: Text("Bike rental"),
+        title: Text("Vehicle rental"),
         backgroundColor: Colors.redAccent,
       ),
       bottomNavigationBar: MotionTabBar(
@@ -59,39 +57,7 @@ class _MapStatefulWidgetState extends State<MapStatefulWidget> with TickerProvid
       body: MotionTabBarView (
         controller: _tabController,
         children: <Widget>[
-          Container(
-            child: new FlutterMap(
-              options: new MapOptions(
-                  center: new LatLng(50.93346374604487, 6.957014837247413)
-              ),
-              layers: [
-                new TileLayerOptions(
-                    urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                    subdomains: ['a', 'b', 'c']
-                ),
-                new MarkerLayerOptions(
-                    markers: [
-                      new Marker(
-                          width: 30,
-                          height: 30,
-                          point: new LatLng(50.93346374604487, 6.957014837247413),
-                          builder: (context) => new Container(
-                            child: createIcon(Icons.electric_bike),
-                          )
-                      ),
-                      new Marker(
-                          width: 30,
-                          height: 30,
-                          point: new LatLng(50.94316978542711, 6.95067259780526),
-                          builder: (context) => new Container(
-                            child: createIcon(Icons.electric_scooter)
-                          )
-                      )
-                    ]
-                )
-              ],
-            ),
-          ),
+          VehicleOverview(),
           Account(),
           Container(
             child: Center(
@@ -100,22 +66,6 @@ class _MapStatefulWidgetState extends State<MapStatefulWidget> with TickerProvid
           )
         ],
       )
-    );
-  }
-
-  createIcon(IconData icon) {
-    return IconButton(
-      icon: Icon(icon),
-      color: Colors.redAccent,
-      iconSize: 20.0,
-      onPressed: () {
-        EasyDialog(
-          title: Text("Rent a thing"),
-          description: Text("This is a basic dialog"),
-          height: 500.0,
-          width: 300.0
-        ).show(context);
-      },
     );
   }
 }

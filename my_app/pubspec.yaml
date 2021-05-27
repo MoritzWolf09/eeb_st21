@@ -34,6 +34,7 @@ dependencies:
   circular_profile_avatar: ^2.0.0
   slider_button: any
   grouped_list: ^4.0.0
+  grouped_buttons: ^1.0.3
 
 
   # The following adds the Cupertino Icons font to your application.

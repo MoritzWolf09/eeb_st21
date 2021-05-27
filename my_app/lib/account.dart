@@ -2,7 +2,6 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:my_app/authentication_service.dart';
-import 'package:slider_button/slider_button.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
