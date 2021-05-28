@@ -70,12 +70,11 @@ class AuthenticationWrapper extends StatelessWidget {
     ];
 
     return LoginFresh(
-      pathLogo: 'assets/logo.png',
+      pathLogo: 'assets/aspin.jpg',
       backgroundColor: Colors.amberAccent,
       cardColor: Colors.redAccent,
       isExploreApp: false,
       isFooter: false,
-      widgetFooter: this.widgetFooter(),
       typeLoginModel: listLogin,
       isSignUp: true,
       widgetSignUp: this.widgetLoginFreshSignUp(),
@@ -91,9 +90,8 @@ class AuthenticationWrapper extends StatelessWidget {
           Navigator.pop(_context, MaterialPageRoute(builder: (_context) => Map()));
           isRequest(false);
       },
-      logo: './assets/logo_head.png',
+      logo: './assets/aspin.jpg',
       isFooter: false,
-      widgetFooter: this.widgetFooter(),
       isResetPassword: true,
       widgetResetPassword: this.widgetResetPassword(),
       isSignUp: true,
@@ -103,7 +101,7 @@ class AuthenticationWrapper extends StatelessWidget {
 
   Widget widgetResetPassword() {
     return LoginFreshResetPassword(
-      logo: 'assets/logo_head.png',
+      logo: 'assets/aspin.jpg',
       funResetPassword:
           (BuildContext _context, Function isRequest, String email) {
         isRequest(true);
@@ -116,34 +114,19 @@ class AuthenticationWrapper extends StatelessWidget {
         });
       },
       isFooter: false,
-      widgetFooter: this.widgetFooter(),
-    );
-  }
-
-  Widget widgetFooter() {
-    return LoginFreshFooter(
-      logo: 'assets/logo_footer.png',
-      text: 'Power by',
-      funFooterLogin: () {
-        // develop what they want the footer to do when the user clicks
-      },
     );
   }
 
   Widget widgetLoginFreshSignUp() {
     return LoginFreshSignUp(
         isFooter: false,
-        widgetFooter: this.widgetFooter(),
-        logo: 'assets/logo_head.png',
+        logo: 'assets/aspin.jpg',
         funSignUp: (BuildContext _context, Function isRequest,
             SignUpModel signUpModel) {
           isRequest(true);
 
-          print(signUpModel.email);
-          print(signUpModel.password);
-          print(signUpModel.repeatPassword);
-          print(signUpModel.surname);
-          print(signUpModel.name);
+          _context.read<AuthenticationService>().signUp(email: signUpModel.email, password: signUpModel.password);
+          Navigator.push(_context, MaterialPageRoute(builder: (_context) => MyApp()));
 
           isRequest(false);
         });
