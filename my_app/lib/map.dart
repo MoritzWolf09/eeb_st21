@@ -3,6 +3,7 @@ import 'package:motion_tab_bar/MotionTabBarView.dart';
 import 'package:motion_tab_bar/MotionTabController.dart';
 import 'package:motion_tab_bar/motiontabbar.dart';
 import 'package:my_app/account.dart';
+import 'package:my_app/rental_chat.dart';
 import 'package:my_app/vehicle_overview.dart';
 
 class Map extends StatelessWidget {
@@ -41,8 +42,8 @@ class _MapStatefulWidgetState extends State<MapStatefulWidget> with TickerProvid
         backgroundColor: Colors.redAccent,
       ),
       bottomNavigationBar: MotionTabBar(
-        labels: [ "Home", "Account"],
-        icons: [Icons.home, Icons.account_box],
+        labels: [ "Home", "Account", "Rentals"],
+        icons: [Icons.home, Icons.account_box, Icons.message],
         tabIconColor: Colors.amberAccent,
         tabSelectedColor: Colors.redAccent,
         initialSelectedTab: "Home",
@@ -59,11 +60,7 @@ class _MapStatefulWidgetState extends State<MapStatefulWidget> with TickerProvid
         children: <Widget>[
           VehicleOverview(),
           Account(),
-          Container(
-            child: Center(
-              child: Text("Not necessary"),
-            )
-          )
+          RentalChat()
         ],
       )
     );

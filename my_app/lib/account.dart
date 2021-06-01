@@ -1,19 +1,14 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:my_app/authentication_service.dart';
+import 'package:my_app/vehicle.dart';
+import 'package:my_app/vehicle_service.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
-  List _elements = [
-    {'name': 'Rennrad Stevens Aspin', 'group': 'Bike'},
-    {'name': 'Mountain Bike Stevens S7', 'group': 'Bike'},
-    {'name': 'Z E-Bike', 'group': 'E-Bike'},
-    {'name': 'VW T5 Transporter', 'group': 'Car'},
-    {'name': 'XY E-Bike', 'group': 'E-Bike'},
-    {'name': 'Cargo Donkey', 'group': 'Cargo bike'},
-  ];
-
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -24,7 +19,7 @@ class Account extends StatelessWidget {
           buildSummary(),
           buildLogoutButton(context),
           buildBoldText("Your vehicle list"),
-          buildVehicleList(),
+          buildVehicleList(context),
         ]))
       ],
     );
@@ -97,44 +92,54 @@ class Account extends StatelessWidget {
     );
   }
 
-  buildVehicleList() {
-    return Container(
-        child: Center(
-      child: GroupedListView<dynamic, String>(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        elements: _elements,
-        groupBy: (element) => element['group'],
-        groupComparator: (value1, value2) => value2.compareTo(value1),
-        itemComparator: (item1, item2) =>
-            item1['name'].compareTo(item2['name']),
-        order: GroupedListOrder.DESC,
-        useStickyGroupSeparators: true,
-        groupSeparatorBuilder: (String value) => Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            value,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-        itemBuilder: (c, element) {
-          return Card(
-            elevation: 8.0,
-            margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-            child: Container(
-              child: ListTile(
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                leading: Icon(Icons.account_circle),
-                title: Text(element['name']),
-                trailing: Icon(Icons.arrow_forward),
-              ),
-            ),
-          );
-        },
-      ),
-    ));
+  buildVehicleList(BuildContext context) {
+    return FutureBuilder(
+        future: VehicleService().readVehicleOfUser(context.watch<User>().uid),
+        builder: (BuildContext context, AsyncSnapshot result) {
+          if (!result.hasData) {
+            return Text("Loading");
+          } else if(result.data != null){
+            return Container(
+                child: Center(
+                  child: GroupedListView<dynamic, String>(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    elements: convertResultToVehicle(result.data),
+                    groupBy: (element) => element.type,
+                    groupComparator: (value1, value2) => value2.compareTo(value1),
+                    itemComparator: (item1, item2) =>
+                        item1.description.compareTo(item2.description),
+                    order: GroupedListOrder.DESC,
+                    useStickyGroupSeparators: true,
+                    groupSeparatorBuilder: (String value) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        value,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    itemBuilder: (c, element) {
+                      return Card(
+                        elevation: 8.0,
+                        margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                        child: Container(
+                          child: ListTile(
+                            contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                            leading: Icon(Icons.account_circle),
+                            title: Text(element.description),
+                            trailing: Icon(Icons.arrow_forward),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ));
+          } else {
+            return Text("Error while loading...");
+          }
+        });
   }
 
   buildLogoutButton(BuildContext context) {
@@ -146,5 +151,26 @@ class Account extends StatelessWidget {
             onPressed: () => {context.read<AuthenticationService>().signOut()}),
       ),
     );
+  }
+
+  List<Vehicle> convertResultToVehicle(
+      QuerySnapshot<Map<String, dynamic>> result) {
+    List<Vehicle> vehicles = [];
+
+    result.docs.forEach((element) {
+      vehicles.add(convertToVehicle(element));
+    });
+
+    return vehicles;
+  }
+
+  Vehicle convertToVehicle(QueryDocumentSnapshot<Map<String, dynamic>> e) {
+    Vehicle vehicle = new Vehicle();
+
+    vehicle.userId = e['userId'];
+    vehicle.description = e['description'];
+    vehicle.type = e['type'];
+
+    return vehicle;
   }
 }
