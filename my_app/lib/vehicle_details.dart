@@ -1,6 +1,7 @@
 import 'package:animated_dialog_box/animated_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:background_app_bar/background_app_bar.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:intl/intl.dart';
@@ -16,11 +17,12 @@ class VehicleDetails extends StatefulWidget {
 class _VehicleDetailsState extends State<VehicleDetails> {
   final _priceController = TextEditingController();
   DateTime dateTime = DateTime.now();
+  var vehicle;
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context).settings.arguments as VehicleArguments;
-    _priceController.text = args.vehicle.price;
+    vehicle = ModalRoute.of(context).settings.arguments as VehicleArguments;
+    _priceController.text = vehicle.vehicle.price;
 
     return new Scaffold(
       body: new NestedScrollView(
@@ -33,7 +35,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             flexibleSpace: new BackgroundFlexibleSpaceBar(
-              title: Text(args.vehicle.description),
+              title: Text(vehicle.vehicle.description),
               centerTitle: false,
               titlePadding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
               background: new ClipRect(
@@ -59,6 +61,8 @@ class _VehicleDetailsState extends State<VehicleDetails> {
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              buildOwnerInformation(),
+              buildRatingInformation(),
               buildInputField("Price", _priceController),
               buildRentalStart(),
               buildRentalButton()
@@ -192,6 +196,29 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     return Container(
       padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
       child: Text(text),
+    );
+  }
+
+  buildOwnerInformation() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(2, 20, 2, 20),
+      child: Text(vehicle.vehicle.userId),
+    );
+  }
+
+  buildRatingInformation() {
+    return RatingBar.builder(
+      initialRating: 4.5,
+      minRating: 1,
+      direction: Axis.horizontal,
+      allowHalfRating: true,
+      itemCount: 5,
+      glow: true,
+      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: Colors.amber,
+      ),
     );
   }
 }
