@@ -114,6 +114,7 @@ class _VehicleOverviewState extends State<VehicleOverview> {
     vehicle.userId = e['userId'];
     vehicle.description = e['description'];
     vehicle.type = e['type'];
+    vehicle.price = e['price'];
 
     return vehicle;
   }

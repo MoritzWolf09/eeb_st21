@@ -66,21 +66,6 @@ class _VehicleChangeState extends State<VehicleChange> {
     );
   }
 
-  Container buildText(text) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
-      child: Text(text),
-    );
-  }
-
-  Container buildBoldText(text) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
-      child: Text(text,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-    );
-  }
-
   buildTypeDropdown() {
     return DropdownButton<String>(
       isExpanded: true,
