@@ -24,7 +24,7 @@ class _VehicleChangeState extends State<VehicleChange> {
     _userId = context.watch<User>().uid;
     final args = ModalRoute.of(context).settings.arguments as VehicleArguments;
     _descriptionController.text = args.vehicle.description;
-    _priceController.text = args.vehicle.price;
+    _priceController.text = args.vehicle.price.toString();
     _dropdownValue = args.vehicle.type;
 
     return Scaffold(

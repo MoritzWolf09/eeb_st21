@@ -1,10 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:background_app_bar/background_app_bar.dart';
+import 'package:my_app/vehicle_agruments.dart';
 
 class VehicleDetails extends StatefulWidget {
   const VehicleDetails({Key key}) : super(key: key);
+  static const routeName = '/vehicleDetails';
 
   @override
   _VehicleDetailsState createState() => _VehicleDetailsState();
@@ -13,6 +13,8 @@ class VehicleDetails extends StatefulWidget {
 class _VehicleDetailsState extends State<VehicleDetails> {
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context).settings.arguments as VehicleArguments;
+
     return new Scaffold(
       body: new NestedScrollView(
         headerSliverBuilder: (_, __) => <Widget>[
@@ -24,7 +26,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             flexibleSpace: new BackgroundFlexibleSpaceBar(
-              title: Text("Test"),
+              title: Text(args.vehicle.description),
               centerTitle: false,
               titlePadding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
               background: new ClipRect(

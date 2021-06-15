@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/vehicle.dart';
+import 'package:my_app/vehicle_agruments.dart';
 import 'package:my_app/vehicle_details.dart';
 import 'package:my_app/vehicle_service.dart';
 
@@ -36,24 +37,23 @@ class _VehicleOverviewState extends State<VehicleOverview> {
     );
   }
 
-  Card buildVehicleCard(title, icon, owner) {
+  Card buildVehicleCard(vehicle, icon) {
     return Card(
         child: Container(
       child: ListTile(
         onTap: () => {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => VehicleDetails()))
+          Navigator.pushNamed(context, VehicleDetails.routeName, arguments: VehicleArguments(vehicle))
         },
         leading: Icon(
           icon,
           size: 13,
         ),
         title: Text(
-          title,
+          vehicle.description,
           textScaleFactor: 0.8,
         ),
         subtitle: Text(
-          owner,
+          vehicle.userId,
           textScaleFactor: 0.8,
         ),
       ),
@@ -93,7 +93,7 @@ class _VehicleOverviewState extends State<VehicleOverview> {
 
     return vehicles
         .map((e) =>
-            buildVehicleCard(e.description, Icons.directions_bike, e.userId))
+            buildVehicleCard(e, Icons.directions_bike))
         .toList();
   }
 
