@@ -10,9 +10,7 @@ class VehicleService {
   }
 
   Future<QuerySnapshot> readVehicles() async {
-    return FirebaseFirestore.instance
-        .collection("vehicle")
-        .get();
+    return FirebaseFirestore.instance.collection("vehicle").get();
   }
 
   void addVehicle(Vehicle vehicle) {
@@ -21,7 +19,18 @@ class VehicleService {
       "description": vehicle.description,
       "price": vehicle.price,
       "type": vehicle.type
-    }
-    );
+    });
+  }
+
+  void changeVehicle(Vehicle vehicle) {
+    FirebaseFirestore.instance.collection("vehicle").doc(vehicle.id).update({
+      "description": vehicle.description,
+      "price": vehicle.price,
+      "type": vehicle.type
+    });
+  }
+
+  Future<DocumentSnapshot> readVehicle(String id) {
+    return FirebaseFirestore.instance.collection("vehicle").doc(id).get();
   }
 }

@@ -4,6 +4,7 @@ import 'package:motion_tab_bar/MotionTabController.dart';
 import 'package:motion_tab_bar/motiontabbar.dart';
 import 'package:my_app/account.dart';
 import 'package:my_app/rental_chat.dart';
+import 'package:my_app/vehicle_change.dart';
 import 'package:my_app/vehicle_overview.dart';
 
 class Map extends StatelessWidget {
@@ -11,6 +12,9 @@ class Map extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MapStatefulWidget(),
+      routes: {
+        VehicleChange.routeName: (context) => VehicleChange()
+      },
     );
   }
 }

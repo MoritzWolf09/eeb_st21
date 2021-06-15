@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:my_app/authentication_service.dart';
 import 'package:my_app/vehicle.dart';
+import 'package:my_app/vehicle_agruments.dart';
+import 'package:my_app/vehicle_change.dart';
 import 'package:my_app/vehicle_configuration.dart';
 import 'package:my_app/vehicle_service.dart';
 import 'package:provider/provider.dart';
@@ -127,9 +129,12 @@ class Account extends StatelessWidget {
                         EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                     child: Container(
                       child: ListTile(
+                        onTap: () => {
+                          Navigator.pushNamed(context, VehicleChange.routeName,
+                              arguments: VehicleArguments(element))
+                        },
                         contentPadding: EdgeInsets.symmetric(
                             horizontal: 20.0, vertical: 10.0),
-                        leading: Icon(Icons.account_circle),
                         title: Text(element.description),
                         trailing: Icon(Icons.arrow_forward),
                       ),
@@ -172,6 +177,7 @@ class Account extends StatelessWidget {
     vehicle.userId = e['userId'];
     vehicle.description = e['description'];
     vehicle.type = e['type'];
+    vehicle.id = e.id;
 
     return vehicle;
   }
