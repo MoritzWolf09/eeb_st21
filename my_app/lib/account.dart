@@ -45,12 +45,10 @@ class Account extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [buildBoldText("6"), buildText("vehicle(s)")],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [buildBoldText("94"), buildText("rental(s)")],
+              children: [
+                buildNumberVehicles(context),
+                buildText("vehicle(s)")
+              ],
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -250,5 +248,20 @@ class Account extends StatelessWidget {
     });
 
     return rating/numberRatings;
+  }
+
+  buildNumberVehicles(BuildContext context) {
+    return FutureBuilder(
+      future: VehicleService().readVehicleOfUser(context.watch<User>().uid),
+      builder: (BuildContext context, AsyncSnapshot result) {
+        if(!result.hasData) {
+          return Text("loading");
+        } else if(result.hasData) {
+          return buildBoldText(result.data.size.toString());
+        } else {
+          return Text("Error");
+        }
+      },
+    );
   }
 }
