@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:my_app/authentication_service.dart';
+import 'package:my_app/rating_service.dart';
 import 'package:my_app/vehicle.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:my_app/vehicle_change.dart';
@@ -19,7 +20,7 @@ class Account extends StatelessWidget {
       slivers: <Widget>[
         SliverList(
             delegate: SliverChildListDelegate([
-          buildSummary(),
+          buildSummary(context),
           buildLogoutButton(context),
           buildListHeader(context),
           buildVehicleList(context),
@@ -28,7 +29,7 @@ class Account extends StatelessWidget {
     );
   }
 
-  Row buildSummary() {
+  Row buildSummary(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -54,7 +55,10 @@ class Account extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [buildBoldText("4,3"), buildText("rating")],
+              children: [
+                buildRating(context),
+                buildText("rating")
+              ],
             ),
           ],
         )
@@ -218,5 +222,33 @@ class Account extends StatelessWidget {
             ),
           ])
     ]);
+  }
+
+  buildRating(BuildContext context) {
+    return FutureBuilder(
+      future: RatingService().readVehicleOfUser(context.watch<User>().uid),
+      builder: (BuildContext context, AsyncSnapshot result) {
+        if(!result.hasData) {
+          return Text("loading");
+        } else if(result.hasData) {
+          return buildBoldText(getRating(result.data).toString());
+        } else {
+          return Text("Error");
+        }
+      },
+    );
+  }
+
+  getRating(
+      QuerySnapshot<Map<String, dynamic>> data) {
+    double rating=0;
+    int numberRatings=0;
+
+    data.docs.forEach((element) {
+      rating = rating + element['rating'];
+      numberRatings++;
+    });
+
+    return rating/numberRatings;
   }
 }

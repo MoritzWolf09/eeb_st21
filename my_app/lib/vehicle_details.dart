@@ -1,8 +1,10 @@
 import 'package:animated_dialog_box/animated_dialog_box.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:background_app_bar/background_app_bar.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:my_app/rating_service.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:intl/intl.dart';
 
@@ -62,7 +64,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               buildOwnerInformation(),
-              buildRatingInformation(),
+              buildRatingInformation(vehicle.vehicle.userId),
               buildInputField("Price", _priceController),
               buildRentalStart(),
               buildRentalButton()
@@ -206,19 +208,43 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     );
   }
 
-  buildRatingInformation() {
-    return RatingBar.builder(
-      initialRating: 4.5,
-      minRating: 1,
-      direction: Axis.horizontal,
-      allowHalfRating: true,
-      itemCount: 5,
-      glow: true,
-      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: Colors.amber,
-      ),
+  buildRatingInformation(userId) {
+    return FutureBuilder(
+      future: RatingService().readVehicleOfUser(userId),
+      builder: (BuildContext context, AsyncSnapshot result) {
+        if(!result.hasData) {
+          return Text("loading");
+        } else if(result.hasData) {
+          return RatingBar.builder(
+            initialRating: getRating(result.data),
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            glow: true,
+            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+          );
+        } else {
+          return Text("Error");
+        }
+      },
     );
+  }
+
+  getRating(
+      QuerySnapshot<Map<String, dynamic>> data) {
+    double rating=0;
+    int numberRatings=0;
+
+    data.docs.forEach((element) {
+      rating = rating + element['rating'];
+      numberRatings++;
+    });
+
+    return rating/numberRatings;
   }
 }
