@@ -5,6 +5,7 @@ import 'package:background_app_bar/background_app_bar.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:my_app/services/rating_service.dart';
+import 'package:my_app/services/user_service.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:intl/intl.dart';
 
@@ -204,7 +205,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   buildOwnerInformation() {
     return Container(
       padding: const EdgeInsets.fromLTRB(2, 20, 2, 20),
-      child: Text(vehicle.vehicle.userId),
+      child: buildUserName(vehicle.vehicle.userId),
     );
   }
 
@@ -246,5 +247,23 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     });
 
     return rating/numberRatings;
+  }
+
+  buildUserName(userId) {
+    return FutureBuilder(
+      future: UserService().readUserInformation(userId),
+      builder: (BuildContext context, AsyncSnapshot result) {
+        if(!result.hasData) {
+          return Text("loading");
+        } else if(result.hasData) {
+          return Text(
+            "Username: " + result.data.docs[0]['nickname'],
+            textScaleFactor: 0.8,
+          );
+        } else {
+          return Text("Error");
+        }
+      },
+    );
   }
 }

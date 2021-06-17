@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/services/user_service.dart';
 import 'package:my_app/vehicle.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:my_app/vehicle_details.dart';
 import 'package:my_app/services/vehicle_service.dart';
+import 'package:provider/provider.dart';
 
 class VehicleOverview extends StatefulWidget {
   const VehicleOverview({Key key}) : super(key: key);
@@ -14,9 +17,11 @@ class VehicleOverview extends StatefulWidget {
 
 class _VehicleOverviewState extends State<VehicleOverview> {
   String _value = 'E-Bike';
+  String _userId;
 
   @override
   Widget build(BuildContext context) {
+    _userId = context.watch<User>().uid;
     return Scaffold(
       appBar: new AppBar(
           title: new DropdownButton<String>(
@@ -52,10 +57,7 @@ class _VehicleOverviewState extends State<VehicleOverview> {
           vehicle.description,
           textScaleFactor: 0.8,
         ),
-        subtitle: Text(
-          vehicle.userId,
-          textScaleFactor: 0.8,
-        ),
+        subtitle: buildUserName(),
       ),
     ));
   }
@@ -77,7 +79,7 @@ class _VehicleOverviewState extends State<VehicleOverview> {
                     mainAxisSpacing: 5,
                     crossAxisCount: 2,
                     childAspectRatio: 2,
-                    children: getVehicles(result),
+                    children: getVehicles(result, context),
                   ),
                 ),
               ],
@@ -88,7 +90,7 @@ class _VehicleOverviewState extends State<VehicleOverview> {
         });
   }
 
-  List<Widget> getVehicles(result) {
+  List<Widget> getVehicles(result, BuildContext context) {
     var vehicles = convertResultToVehicle(result.data);
 
     return vehicles
@@ -117,5 +119,23 @@ class _VehicleOverviewState extends State<VehicleOverview> {
     vehicle.price = e['price'];
 
     return vehicle;
+  }
+
+  buildUserName() {
+    return FutureBuilder(
+    future: UserService().readUserInformation(_userId),
+    builder: (BuildContext context, AsyncSnapshot result) {
+      if(!result.hasData) {
+        return Text("loading");
+      } else if(result.hasData) {
+        return Text(
+          result.data.docs[0]['nickname'],
+          textScaleFactor: 0.8,
+        );
+      } else {
+        return Text("Error");
+      }
+    },
+  );
   }
 }
