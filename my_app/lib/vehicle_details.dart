@@ -28,12 +28,15 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   var vehicle;
   User _user;
   UserInformation _userInformationOwner;
+  UserInformation _userInformationRenter;
 
   @override
   Widget build(BuildContext context) {
     vehicle = ModalRoute.of(context).settings.arguments as VehicleArguments;
     _priceController.text = vehicle.vehicle.price;
     _user = context.watch<User>();
+    UserService().readUserInformation(_user.uid).then((value) =>
+        _userInformationRenter = createrUserInformation(value.docs[0]));
 
     return new Scaffold(
       body: new NestedScrollView(
@@ -143,7 +146,8 @@ class _VehicleDetailsState extends State<VehicleDetails> {
               color: Colors.red,
             ), // IF YOU WANT TO ADD ICON
             yourWidget: Container(
-              child: Text('Are you sure to create a rental request for this vehicle?'),
+              child: Text(
+                  'Are you sure to create a rental request for this vehicle?'),
             ));
       },
     );
@@ -223,9 +227,9 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     return FutureBuilder(
       future: RatingService().readVehicleOfUser(userId),
       builder: (BuildContext context, AsyncSnapshot result) {
-        if(!result.hasData) {
+        if (!result.hasData) {
           return Text("loading");
-        } else if(result.hasData) {
+        } else if (result.hasData) {
           return RatingBar.builder(
             initialRating: getRating(result.data),
             minRating: 1,
@@ -246,26 +250,25 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     );
   }
 
-  getRating(
-      QuerySnapshot<Map<String, dynamic>> data) {
-    double rating=0;
-    int numberRatings=0;
+  getRating(QuerySnapshot<Map<String, dynamic>> data) {
+    double rating = 0;
+    int numberRatings = 0;
 
     data.docs.forEach((element) {
       rating = rating + element['rating'];
       numberRatings++;
     });
 
-    return rating/numberRatings;
+    return rating / numberRatings;
   }
 
   buildUserName(userId) {
     return FutureBuilder(
       future: UserService().readUserInformation(userId),
       builder: (BuildContext context, AsyncSnapshot result) {
-        if(!result.hasData) {
+        if (!result.hasData) {
           return Text("loading");
-        } else if(result.hasData) {
+        } else if (result.hasData) {
           _userInformationOwner = createrUserInformation(result.data.docs[0]);
 
           return Text(
@@ -285,7 +288,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     rental.rentalStart = DateFormat('dd.MM.yyyy').format(dateTime);
     rental.ownerId = vehicle.vehicle.userId;
     rental.renterId = _user.uid;
-    rental.renterName = "Test";
+    rental.renterName = _userInformationRenter.nickname;
     rental.vehicleId = vehicle.vehicle.id;
     rental.vehicleDescription = vehicle.vehicle.description;
     rental.ownerName = _userInformationOwner.nickname;

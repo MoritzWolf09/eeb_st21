@@ -15,6 +15,7 @@ class RentalService {
       "status": 0
     });
   }
+
   Future<QuerySnapshot> readRentalRequestsForUser(userId) async {
     return FirebaseFirestore.instance
         .collection("rental")
