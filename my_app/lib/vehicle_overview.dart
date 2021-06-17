@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/services/user_service.dart';
-import 'package:my_app/vehicle.dart';
+import 'package:my_app/objects/vehicle.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:my_app/vehicle_details.dart';
 import 'package:my_app/services/vehicle_service.dart';
@@ -117,6 +117,7 @@ class _VehicleOverviewState extends State<VehicleOverview> {
     vehicle.description = e['description'];
     vehicle.type = e['type'];
     vehicle.price = e['price'];
+    vehicle.id = e.id;
 
     return vehicle;
   }

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_app/vehicle.dart';
+import 'package:my_app/objects/vehicle.dart';
 
 class VehicleService {
   Future<QuerySnapshot> readVehicleOfUser(userId) async {

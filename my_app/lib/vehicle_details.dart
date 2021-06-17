@@ -1,13 +1,18 @@
 import 'package:animated_dialog_box/animated_dialog_box.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:background_app_bar/background_app_bar.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:my_app/objects/rental.dart';
+import 'package:my_app/objects/user.dart';
 import 'package:my_app/services/rating_service.dart';
+import 'package:my_app/services/rental_service.dart';
 import 'package:my_app/services/user_service.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class VehicleDetails extends StatefulWidget {
   const VehicleDetails({Key key}) : super(key: key);
@@ -21,11 +26,14 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   final _priceController = TextEditingController();
   DateTime dateTime = DateTime.now();
   var vehicle;
+  User _user;
+  UserInformation _userInformationOwner;
 
   @override
   Widget build(BuildContext context) {
     vehicle = ModalRoute.of(context).settings.arguments as VehicleArguments;
     _priceController.text = vehicle.vehicle.price;
+    _user = context.watch<User>();
 
     return new Scaffold(
       body: new NestedScrollView(
@@ -114,6 +122,8 @@ class _VehicleDetailsState extends State<VehicleDetails> {
               color: Colors.white,
               child: Text('Create rental request'),
               onPressed: () {
+                RentalService().createRentalRequest(createRental());
+                Navigator.of(context, rootNavigator: true).pop();
                 Navigator.of(context).pop();
               },
             ),
@@ -125,7 +135,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
               color: Colors.white,
               child: Text('Cancel'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context, rootNavigator: true).pop();
               },
             ),
             icon: Icon(
@@ -133,7 +143,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
               color: Colors.red,
             ), // IF YOU WANT TO ADD ICON
             yourWidget: Container(
-              child: Text('This is my first package'),
+              child: Text('Are you sure to create a rental request for this vehicle?'),
             ));
       },
     );
@@ -256,8 +266,10 @@ class _VehicleDetailsState extends State<VehicleDetails> {
         if(!result.hasData) {
           return Text("loading");
         } else if(result.hasData) {
+          _userInformationOwner = createrUserInformation(result.data.docs[0]);
+
           return Text(
-            "Username: " + result.data.docs[0]['nickname'],
+            "Username: " + _userInformationOwner.nickname,
             textScaleFactor: 0.8,
           );
         } else {
@@ -265,5 +277,29 @@ class _VehicleDetailsState extends State<VehicleDetails> {
         }
       },
     );
+  }
+
+  Rental createRental() {
+    Rental rental = new Rental();
+
+    rental.rentalStart = DateFormat('dd.MM.yyyy').format(dateTime);
+    rental.ownerId = vehicle.vehicle.userId;
+    rental.renterId = _user.uid;
+    rental.renterName = "Test";
+    rental.vehicleId = vehicle.vehicle.id;
+    rental.vehicleDescription = vehicle.vehicle.description;
+    rental.ownerName = _userInformationOwner.nickname;
+
+    return rental;
+  }
+
+  UserInformation createrUserInformation(doc) {
+    UserInformation ui = new UserInformation();
+
+    ui.nickname = doc['nickname'];
+    ui.name = doc['name'];
+    ui.surname = doc['surname'];
+
+    return ui;
   }
 }

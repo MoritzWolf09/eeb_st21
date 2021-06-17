@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:my_app/authentication_service.dart';
 import 'package:my_app/services/rating_service.dart';
-import 'package:my_app/vehicle.dart';
+import 'package:my_app/objects/vehicle.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:my_app/vehicle_change.dart';
 import 'package:my_app/vehicle_configuration.dart';

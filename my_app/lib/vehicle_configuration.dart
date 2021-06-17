@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/vehicle.dart';
+import 'package:my_app/objects/vehicle.dart';
 import 'package:my_app/services/vehicle_service.dart';
 import 'package:provider/provider.dart';
 
