@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:background_app_bar/background_app_bar.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
-import 'package:my_app/rating_service.dart';
+import 'package:my_app/services/rating_service.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:intl/intl.dart';
 

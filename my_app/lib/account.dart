@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:my_app/authentication_service.dart';
-import 'package:my_app/rating_service.dart';
+import 'package:my_app/services/rating_service.dart';
 import 'package:my_app/vehicle.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:my_app/vehicle_change.dart';
 import 'package:my_app/vehicle_configuration.dart';
-import 'package:my_app/vehicle_service.dart';
+import 'package:my_app/services/vehicle_service.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
