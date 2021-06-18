@@ -7,5 +7,6 @@ class Rental {
   String ownerName;
   String rentalStart;
   String rentalId;
+  String rentalType;
   int status;
 }

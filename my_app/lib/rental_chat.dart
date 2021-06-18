@@ -43,10 +43,10 @@ class _RentalChatState extends State<RentalChat> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   elements: convertResultToRental(result.data),
-                  groupBy: (element) => element.rentalId,
+                  groupBy: (element) => element.rentalType,
                   groupComparator: (value1, value2) => value2.compareTo(value1),
                   itemComparator: (item1, item2) =>
-                      item1.description.compareTo(item2.rentalId),
+                      item1.rentalType.compareTo(item2.rentalType),
                   order: GroupedListOrder.DESC,
                   useStickyGroupSeparators: true,
                   groupSeparatorBuilder: (String value) => Padding(
@@ -106,6 +106,7 @@ class _RentalChatState extends State<RentalChat> {
     rental.ownerName = element['ownerName'];
     rental.rentalStart = element['rentalStart'];
     rental.rentalId = element.id;
+    rental.rentalType = 'Rental requests';
 
     return rental;
   }
