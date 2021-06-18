@@ -3,18 +3,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_app/authentication_service.dart';
 import 'package:my_app/services/rating_service.dart';
 import 'package:my_app/objects/vehicle.dart';
+import 'package:my_app/services/storage_service.dart';
 import 'package:my_app/vehicle_agruments.dart';
 import 'package:my_app/vehicle_change.dart';
 import 'package:my_app/vehicle_configuration.dart';
 import 'package:my_app/services/vehicle_service.dart';
 import 'package:provider/provider.dart';
 
-class Account extends StatelessWidget {
+class Account extends StatefulWidget {
+  const Account({Key key}) : super(key: key);
+
+  @override
+  _AccountState createState() => _AccountState();
+}
+
+class _AccountState extends State<Account> {
+  var imageFile;
+  var _userId;
+
   @override
   Widget build(BuildContext context) {
+    _userId = context.watch<User>().uid;
+
     return CustomScrollView(
       primary: false,
       slivers: <Widget>[
@@ -64,22 +78,104 @@ class Account extends StatelessWidget {
     );
   }
 
-  Container buildAvatarContainer() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Center(
-          child: CircularProfileAvatar(
-        null,
-        child: Icon(
-          Icons.person,
-          size: 140,
-        ),
-        borderColor: Colors.black,
-        borderWidth: 3,
-        elevation: 5,
-        radius: 75,
-      )),
+  buildAvatarContainer() {
+    return FutureBuilder(
+        future: StorageService().getAvatarUrl(_userId),
+        builder: (BuildContext context, AsyncSnapshot resultUrl) {
+          if(!resultUrl.hasData || resultUrl.hasError) {
+            return Container(
+              padding: const EdgeInsets.all(8),
+              child: Center(
+                  child: CircularProfileAvatar(
+                    null,
+                    child: Icon(
+                      Icons.person,
+                      size: 140,
+                    ),
+                    onTap: () => {
+                      Future_showChoiceDialog(context)
+                    },
+                    borderColor: Colors.black,
+                    borderWidth: 3,
+                    elevation: 5,
+                    radius: 75,
+                  )),
+            );
+          } else {
+            return Container(
+              padding: const EdgeInsets.all(8),
+              child: Center(
+                  child: CircularProfileAvatar(
+                    null,
+                    child: Image.network(
+                        resultUrl.data,
+                      height: 140,
+                      width: 140,
+                    ),
+                    onTap: () => {
+                      Future_showChoiceDialog(context)
+                    },
+                    borderColor: Colors.black,
+                    borderWidth: 3,
+                    elevation: 5,
+                    radius: 75,
+                  )),
+            );
+          }
+        }
     );
+  }
+
+  Future_showChoiceDialog(BuildContext context)
+  {
+    return showDialog(context: context,builder: (BuildContext context){
+
+      return AlertDialog(
+        title: Text("Choose option",style: TextStyle(color: Colors.redAccent),),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: [
+              Divider(height: 1,color: Colors.yellowAccent,),
+              ListTile(
+                onTap: (){
+                  _openGallery(context);
+                },
+                title: Text("Gallery"),
+                leading: Icon(Icons.account_box,color: Colors.redAccent,),
+              ),
+
+              Divider(height: 1,color: Colors.yellowAccent,),
+              ListTile(
+                onTap: (){
+                  _openCamera(context);
+                },
+                title: Text("Camera"),
+                leading: Icon(Icons.camera,color: Colors.redAccent,),
+              ),
+            ],
+          ),
+        ),);
+    });
+  }
+
+  void _openGallery(BuildContext context) async{
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery ,
+    );
+
+    setState(() {
+      imageFile = pickedFile;
+    });
+  }
+
+  void _openCamera(BuildContext context)  async{
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera ,
+    );
+
+    setState(() {
+      imageFile = pickedFile;
+    });
   }
 
   Container buildText(text) {
@@ -99,7 +195,7 @@ class Account extends StatelessWidget {
 
   buildVehicleList(BuildContext context) {
     return FutureBuilder(
-        future: VehicleService().readVehicleOfUser(context.watch<User>().uid),
+        future: VehicleService().readVehicleOfUser(_userId),
         builder: (BuildContext context, AsyncSnapshot result) {
           if (!result.hasData) {
             return Text("Loading");
