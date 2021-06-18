@@ -7,8 +7,6 @@ class StorageService {
         .ref('users/' + userId + '.png')
         .getDownloadURL();
 
-    print(downloadURL);
-
     return downloadURL;
   }
 }
