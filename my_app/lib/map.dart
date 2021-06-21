@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:motion_tab_bar/MotionTabBarView.dart';
 import 'package:motion_tab_bar/MotionTabController.dart';
 import 'package:motion_tab_bar/motiontabbar.dart';
-import 'package:my_app/account.dart';
-import 'package:my_app/rental_chat.dart';
-import 'package:my_app/vehicle_change.dart';
-import 'package:my_app/vehicle_details.dart';
-import 'package:my_app/vehicle_overview.dart';
+import 'package:my_app/account/account.dart';
+import 'package:my_app/rental/rental_chat.dart';
+import 'package:my_app/vehicle/vehicle_change.dart';
+import 'package:my_app/vehicle/vehicle_details.dart';
+import 'package:my_app/vehicle/vehicle_overview.dart';
 
 class Map extends StatelessWidget {
   @override

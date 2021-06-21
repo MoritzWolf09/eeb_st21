@@ -10,7 +10,7 @@ import 'package:my_app/objects/user.dart';
 import 'package:my_app/services/rating_service.dart';
 import 'package:my_app/services/rental_service.dart';
 import 'package:my_app/services/user_service.dart';
-import 'package:my_app/vehicle_agruments.dart';
+import 'package:my_app/objects/vehicle_agruments.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
