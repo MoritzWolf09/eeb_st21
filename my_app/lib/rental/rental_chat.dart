@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:my_app/objects/rental.dart';
+import 'package:my_app/rental/rental_detail.dart';
 import 'package:my_app/services/rental_service.dart';
 import 'package:my_app/services/storage_service.dart';
 import 'package:my_app/services/vehicle_service.dart';
@@ -68,7 +69,10 @@ class _RentalChatState extends State<RentalChat> {
                         EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                         child: Container(
                           child: ListTile(
-                            onTap: () => {},
+                            onTap: () => {
+                              Navigator.pushNamed(context, RentalDetail.routeName,
+                                  arguments: element)
+                            },
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 10.0),
                             title: Text(element.vehicleDescription),
@@ -125,7 +129,10 @@ class _RentalChatState extends State<RentalChat> {
                         EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                     child: Container(
                       child: ListTile(
-                        onTap: () => {},
+                        onTap: () => {
+                          Navigator.pushNamed(context, RentalDetail.routeName,
+                              arguments: element)
+                        },
                         contentPadding: EdgeInsets.symmetric(
                             horizontal: 20.0, vertical: 10.0),
                         title: Text(element.vehicleDescription),

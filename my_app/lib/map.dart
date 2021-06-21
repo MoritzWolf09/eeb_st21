@@ -4,6 +4,7 @@ import 'package:motion_tab_bar/MotionTabController.dart';
 import 'package:motion_tab_bar/motiontabbar.dart';
 import 'package:my_app/account/account.dart';
 import 'package:my_app/rental/rental_chat.dart';
+import 'package:my_app/rental/rental_detail.dart';
 import 'package:my_app/vehicle/vehicle_change.dart';
 import 'package:my_app/vehicle/vehicle_details.dart';
 import 'package:my_app/vehicle/vehicle_overview.dart';
@@ -15,7 +16,8 @@ class Map extends StatelessWidget {
       home: MapStatefulWidget(),
       routes: {
         VehicleChange.routeName: (context) => VehicleChange(),
-        VehicleDetails.routeName: (context) => VehicleDetails()
+        VehicleDetails.routeName: (context) => VehicleDetails(),
+        RentalDetail.routeName: (context) => RentalDetail()
       },
     );
   }
