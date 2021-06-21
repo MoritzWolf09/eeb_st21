@@ -28,9 +28,67 @@ class _RentalChatState extends State<RentalChat> {
         SliverList(
             delegate: SliverChildListDelegate([
           buildRentalChat(context),
+              buildRentalRequests(context)
         ]))
       ],
     );
+  }
+
+  buildRentalRequests(BuildContext context) {
+    return FutureBuilder(
+        future: RentalService().readRentalRequestsForRenter(_userId),
+        builder: (BuildContext context, AsyncSnapshot result) {
+          if (!result.hasData) {
+            return Text("Loading");
+          } else if (result.data != null) {
+            return Container(
+                child: Center(
+                  child: GroupedListView<dynamic, String>(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    elements: convertResultToRental(result.data, "Your rental requests"),
+                    groupBy: (element) => element.rentalType,
+                    groupComparator: (value1, value2) => value2.compareTo(value1),
+                    itemComparator: (item1, item2) =>
+                        item1.rentalType.compareTo(item2.rentalType),
+                    order: GroupedListOrder.DESC,
+                    useStickyGroupSeparators: true,
+                    groupSeparatorBuilder: (String value) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        value,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    itemBuilder: (c, element) {
+                      return Card(
+                        elevation: 8.0,
+                        margin:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                        child: Container(
+                          child: ListTile(
+                            onTap: () => {},
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            title: Text(element.vehicleDescription),
+                            subtitle: Text("Renter: " +
+                                element.renterName +
+                                " / Start date: " +
+                                element.rentalStart),
+                            trailing: Icon(Icons.arrow_forward),
+                            leading: generateRenterAvatar(element.renterId),
+                            isThreeLine: true,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ));
+          } else {
+            return Text("Error while loading...");
+          }
+        });
   }
 
   buildRentalChat(BuildContext context) {
@@ -45,7 +103,7 @@ class _RentalChatState extends State<RentalChat> {
               child: GroupedListView<dynamic, String>(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                elements: convertResultToRental(result.data),
+                elements: convertResultToRental(result.data, "Rental requests"),
                 groupBy: (element) => element.rentalType,
                 groupComparator: (value1, value2) => value2.compareTo(value1),
                 itemComparator: (item1, item2) =>
@@ -91,17 +149,17 @@ class _RentalChatState extends State<RentalChat> {
   }
 
   List<Rental> convertResultToRental(
-      QuerySnapshot<Map<String, dynamic>> result) {
+      QuerySnapshot<Map<String, dynamic>> result, type) {
     List<Rental> vehicles = [];
 
     result.docs.forEach((element) {
-      vehicles.add(convertToRental(element));
+      vehicles.add(convertToRental(element, type));
     });
 
     return vehicles;
   }
 
-  convertToRental(element) {
+  convertToRental(element, type) {
     Rental rental = new Rental();
 
     rental.vehicleId = element['vehicleId'];
@@ -112,7 +170,7 @@ class _RentalChatState extends State<RentalChat> {
     rental.ownerName = element['ownerName'];
     rental.rentalStart = element['rentalStart'];
     rental.rentalId = element.id;
-    rental.rentalType = 'Rental requests';
+    rental.rentalType = type;
 
     return rental;
   }

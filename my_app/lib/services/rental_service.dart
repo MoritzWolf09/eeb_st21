@@ -22,4 +22,11 @@ class RentalService {
         .where("ownerId", isEqualTo: userId)
         .get();
   }
+
+  readRentalRequestsForRenter(String userId) {
+    return FirebaseFirestore.instance
+        .collection("rental")
+        .where("renterId", isEqualTo: userId)
+        .get();
+  }
 }
