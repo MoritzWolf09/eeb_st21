@@ -3,6 +3,18 @@ import 'package:my_app/objects/rental.dart';
 
 class RentalService {
 
+  void acceptRentalRequest(Rental rental) {
+    FirebaseFirestore.instance.collection("rental").doc(rental.rentalId).update({
+      "status": 1
+    });
+  }
+
+  void closeRentalRequest(Rental rental) {
+    FirebaseFirestore.instance.collection("rental").doc(rental.rentalId).update({
+      "status": 2
+    });
+  }
+
   void createRentalRequest(Rental rental) {
     FirebaseFirestore.instance.collection("rental").add({
       "vehicleId": rental.vehicleId,
