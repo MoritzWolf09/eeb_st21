@@ -9,8 +9,11 @@ class VehicleService {
         .get();
   }
 
-  Future<QuerySnapshot> readVehicles() async {
-    return FirebaseFirestore.instance.collection("vehicle").get();
+  Future<QuerySnapshot> readVehicles(String userId) async {
+    return FirebaseFirestore.instance
+        .collection("vehicle")
+        .where("userId", isNotEqualTo: userId)
+        .get();
   }
 
   void addVehicle(Vehicle vehicle) {

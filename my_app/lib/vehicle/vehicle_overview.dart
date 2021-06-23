@@ -23,21 +23,6 @@ class _VehicleOverviewState extends State<VehicleOverview> {
   Widget build(BuildContext context) {
     _userId = context.watch<User>().uid;
     return Scaffold(
-      appBar: new AppBar(
-          title: new DropdownButton<String>(
-        value: _value,
-        items: <DropdownMenuItem<String>>[
-          new DropdownMenuItem(
-            child: new Text('E-Bike'),
-            value: 'E-Bike',
-          ),
-          new DropdownMenuItem(
-              child: new Text('Mountain bike'), value: 'Mountain Bike'),
-        ],
-        onChanged: (String value) {
-          setState(() => _value = value);
-        },
-      )),
       body: buildVehileList(),
     );
   }
@@ -64,7 +49,7 @@ class _VehicleOverviewState extends State<VehicleOverview> {
 
   buildVehileList() {
     return FutureBuilder(
-        future: VehicleService().readVehicles(),
+        future: VehicleService().readVehicles(_userId),
         builder: (BuildContext context, AsyncSnapshot result) {
           if (!result.hasData) {
             return Text("Loading vehicles");
