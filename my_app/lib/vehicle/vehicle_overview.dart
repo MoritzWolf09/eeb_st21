@@ -42,7 +42,7 @@ class _VehicleOverviewState extends State<VehicleOverview> {
           vehicle.description,
           textScaleFactor: 0.8,
         ),
-        subtitle: buildUserName(),
+        subtitle: buildUserName(vehicle.userId),
       ),
     ));
   }
@@ -107,9 +107,9 @@ class _VehicleOverviewState extends State<VehicleOverview> {
     return vehicle;
   }
 
-  buildUserName() {
+  buildUserName(userId) {
     return FutureBuilder(
-    future: UserService().readUserInformation(_userId),
+    future: UserService().readUserInformation(userId),
     builder: (BuildContext context, AsyncSnapshot result) {
       if(!result.hasData) {
         return Text("loading");
