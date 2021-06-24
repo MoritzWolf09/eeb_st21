@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:login_fresh/login_fresh.dart';
 import 'package:my_app/services/authentication_service.dart';
 import 'package:my_app/map.dart';
+import 'package:my_app/services/user_service.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -18,20 +21,18 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           Provider<AuthenticationService>(
-              create: (_) => AuthenticationService(FirebaseAuth.instance)
-          ),
+              create: (_) => AuthenticationService(FirebaseAuth.instance)),
           StreamProvider(
-              create: (context) => context.read<AuthenticationService>().authStateChanges
-          )
+              create: (context) =>
+                  context.read<AuthenticationService>().authStateChanges)
         ],
         child: MaterialApp(
-        title: 'Test',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: AuthenticationWrapper())
-    );
+            title: 'Test',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: AuthenticationWrapper()));
   }
 }
 
@@ -40,7 +41,7 @@ class AuthenticationWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
 
-    if (firebaseUser != null ) {
+    if (firebaseUser != null) {
       return Map();
     }
     return buildLoginFresh();
@@ -85,10 +86,13 @@ class AuthenticationWrapper extends StatelessWidget {
     return LoginFreshUserAndPassword(
       callLogin: (BuildContext _context, Function isRequest, String user,
           String password) {
-          isRequest(true);
-          _context.read<AuthenticationService>().signIn(email: user.trim(), password: password.trim());
-          Navigator.pop(_context, MaterialPageRoute(builder: (_context) => Map()));
-          isRequest(false);
+        isRequest(true);
+        _context
+            .read<AuthenticationService>()
+            .signIn(email: user.trim(), password: password.trim());
+        Navigator.pop(
+            _context, MaterialPageRoute(builder: (_context) => Map()));
+        isRequest(false);
       },
       logo: './assets/aspin.jpg',
       isFooter: false,
@@ -125,8 +129,18 @@ class AuthenticationWrapper extends StatelessWidget {
             SignUpModel signUpModel) {
           isRequest(true);
 
-          _context.read<AuthenticationService>().signUp(email: signUpModel.email, password: signUpModel.password);
-          Navigator.push(_context, MaterialPageRoute(builder: (_context) => MyApp()));
+          _context
+              .read<AuthenticationService>()
+              .signUp(email: signUpModel.email, password: signUpModel.password)
+              .then((value) => {
+                    UserService().addUserInformation(
+                        value.user.uid,
+                        signUpModel.name,
+                        signUpModel.surname,
+                        signUpModel.name + " " + signUpModel.surname)
+                  });
+          Navigator.push(
+              _context, MaterialPageRoute(builder: (_context) => MyApp()));
 
           isRequest(false);
         });
