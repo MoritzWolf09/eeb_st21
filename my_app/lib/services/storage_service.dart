@@ -12,9 +12,9 @@ class StorageService {
   }
 
   // Gets Vehicle URL for the userId form Firebase Storage
-  Future<String> getBikeUrl(vehicleId) async {
+  Future<String> getVehicleUrl(vehicleId) async {
     String downloadURL = await FirebaseStorage.instance
-        .ref('vehicle/' + vehicleId + '.png')
+        .ref('vehicle/' + vehicleId + '.jpg')
         .getDownloadURL();
 
     return downloadURL;

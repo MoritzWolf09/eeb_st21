@@ -9,6 +9,7 @@ import 'package:my_app/objects/rental.dart';
 import 'package:my_app/objects/user.dart';
 import 'package:my_app/services/rating_service.dart';
 import 'package:my_app/services/rental_service.dart';
+import 'package:my_app/services/storage_service.dart';
 import 'package:my_app/services/user_service.dart';
 import 'package:my_app/objects/vehicle_agruments.dart';
 import 'package:intl/intl.dart';
@@ -49,26 +50,10 @@ class _VehicleDetailsState extends State<VehicleDetails> {
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             flexibleSpace: new BackgroundFlexibleSpaceBar(
-              title: Text(vehicle.vehicle.description),
-              centerTitle: false,
-              titlePadding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
-              background: new ClipRect(
-                child: new Container(
-                  child: new Container(
-                    decoration: new BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                    ),
-                  ),
-                  decoration: new BoxDecoration(
-                      image: new DecorationImage(
-                    image: new AssetImage(
-                      "assets/aspin.jpg",
-                    ),
-                    fit: BoxFit.fill,
-                  )),
-                ),
-              ),
-            ),
+                title: Text(vehicle.vehicle.description),
+                centerTitle: false,
+                titlePadding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
+                background: buildVehicleBackgroud()),
           ),
         ],
         body: new Center(
@@ -304,5 +289,45 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     ui.surname = doc['surname'];
 
     return ui;
+  }
+
+  buildVehicleBackgroud() {
+    return new FutureBuilder(
+        future: StorageService().getVehicleUrl(vehicle.vehicle.id),
+        builder: (BuildContext context, AsyncSnapshot resultUrl) {
+          if (!resultUrl.hasData || resultUrl.hasError) {
+            return new ClipRect(
+              child: new Container(
+                child: new Container(
+                  decoration: new BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                ),
+                decoration: new BoxDecoration(
+                    image: new DecorationImage(
+                  image: new AssetImage(
+                    "assets/aspin.jpg",
+                  ),
+                  fit: BoxFit.fill,
+                )),
+              ),
+            );
+          } else {
+            return new ClipRect(
+              child: new Container(
+                child: new Container(
+                  decoration: new BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                ),
+                decoration: new BoxDecoration(
+                    image: new DecorationImage(
+                  image: new Image.network(resultUrl.data).image,
+                  fit: BoxFit.fill,
+                )),
+              ),
+            );
+          }
+        });
   }
 }
