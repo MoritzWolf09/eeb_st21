@@ -81,7 +81,7 @@ class _RentalChatState extends State<RentalChat> {
                                 " / Start date: " +
                                 element.rentalStart),
                             trailing: Icon(Icons.arrow_forward),
-                            leading: generateRenterAvatar(element.renterId),
+                            leading: generateRenterAvatar(element.ownerId),
                             isThreeLine: true,
                           ),
                         ),

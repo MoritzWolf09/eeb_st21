@@ -68,7 +68,7 @@ class _RentalDetailState extends State<RentalDetail> {
 
   buildRenterAvatar(BuildContext context) {
     return FutureBuilder(
-        future: StorageService().getAvatarUrl(_rental.renterId),
+        future: StorageService().getAvatarUrl(_rental.ownerId),
         builder: (BuildContext context, AsyncSnapshot resultUrl) {
           if (!resultUrl.hasData || resultUrl.hasError) {
             return Container(
