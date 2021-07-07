@@ -21,6 +21,7 @@ class _VehicleChangeState extends State<VehicleChange> {
 
   @override
   Widget build(BuildContext context) {
+    // getting objects from session and previous page
     _userId = context.watch<User>().uid;
     final args = ModalRoute.of(context).settings.arguments as VehicleArguments;
     _descriptionController.text = args.vehicle.description;
@@ -41,7 +42,7 @@ class _VehicleChangeState extends State<VehicleChange> {
                   _descriptionController),
               buildInputField(
                   "Please enter price of vehicle", _priceController),
-              buildTypeDropdown(),
+              buildVehicleTypeDropdown(),
               buildSaveButton(args.vehicle.id)
             ]))
           ],
@@ -66,7 +67,7 @@ class _VehicleChangeState extends State<VehicleChange> {
     );
   }
 
-  buildTypeDropdown() {
+  buildVehicleTypeDropdown() {
     return DropdownButton<String>(
       isExpanded: true,
       value: _dropdownValue,
@@ -78,7 +79,7 @@ class _VehicleChangeState extends State<VehicleChange> {
           _dropdownValue = newValue;
         });
       },
-      items: <String>['Mountain bike', 'City bike', 'Racing bike' '']
+      items: <String>['Mountain bike', 'City bike', 'E-Bike', 'Cargo bike', 'Racing bike', '']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
@@ -107,6 +108,8 @@ class _VehicleChangeState extends State<VehicleChange> {
     vehicle.price = _priceController.text;
     vehicle.type = _dropdownValue;
     VehicleService().changeVehicle(vehicle);
+
+    // Navigate back to previous page
     Navigator.pop(context);
   }
 }

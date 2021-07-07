@@ -25,6 +25,7 @@ class _RentalDetailState extends State<RentalDetail> {
   @override
   Widget build(BuildContext context) {
     _userId = context.watch<User>().uid;
+    // Getting rental object from previous page
     _rental = ModalRoute.of(context).settings.arguments as Rental;
 
     return Scaffold(
