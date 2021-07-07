@@ -85,7 +85,7 @@ class _VehicleConfigurationState extends State<VehicleConfiguration> {
           _dropdownValue = newValue;
         });
       },
-      items: <String>['Mountain bike', 'City bike', '']
+      items: <String>['Mountain bike', 'City bike', 'E-Bike', 'Cargo bike', 'Racing bike', '']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,

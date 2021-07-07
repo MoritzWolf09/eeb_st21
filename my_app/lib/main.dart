@@ -71,7 +71,7 @@ class AuthenticationWrapper extends StatelessWidget {
     ];
 
     return LoginFresh(
-      pathLogo: 'assets/aspin.jpg',
+      pathLogo: 'assets/logo.jpg',
       backgroundColor: Colors.amberAccent,
       cardColor: Colors.redAccent,
       isExploreApp: false,
@@ -94,7 +94,7 @@ class AuthenticationWrapper extends StatelessWidget {
             _context, MaterialPageRoute(builder: (_context) => Map()));
         isRequest(false);
       },
-      logo: './assets/aspin.jpg',
+      logo: './assets/logo.jpg',
       isFooter: false,
       isResetPassword: true,
       widgetResetPassword: this.widgetResetPassword(),
@@ -105,7 +105,7 @@ class AuthenticationWrapper extends StatelessWidget {
 
   Widget widgetResetPassword() {
     return LoginFreshResetPassword(
-      logo: 'assets/aspin.jpg',
+      logo: 'assets/logo.jpg',
       funResetPassword:
           (BuildContext _context, Function isRequest, String email) {
         isRequest(true);
@@ -124,7 +124,7 @@ class AuthenticationWrapper extends StatelessWidget {
   Widget widgetLoginFreshSignUp() {
     return LoginFreshSignUp(
         isFooter: false,
-        logo: 'assets/aspin.jpg',
+        logo: 'assets/logo.png',
         funSignUp: (BuildContext _context, Function isRequest,
             SignUpModel signUpModel) {
           isRequest(true);
