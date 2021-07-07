@@ -25,7 +25,7 @@ class _RentalDetailState extends State<RentalDetail> {
   @override
   Widget build(BuildContext context) {
     _userId = context.watch<User>().uid;
-    // Getting rental object from previous page
+    // Getting rental object from previou
     _rental = ModalRoute.of(context).settings.arguments as Rental;
 
     return Scaffold(
@@ -59,6 +59,7 @@ class _RentalDetailState extends State<RentalDetail> {
                   delegate: SliverChildListDelegate([
                 buildRenterRating(context),
                 buildRentalStart(),
+                buildRentalEnd(),
                 buildVehicleInformation(),
                 buildRentalButton()
               ]))
@@ -238,5 +239,15 @@ class _RentalDetailState extends State<RentalDetail> {
     }
 
     return Container();
+  }
+
+  buildRentalEnd() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(2, 20, 8, 2),
+      child: Center(
+        child: Text("Rental end date: " + _rental.rentalEnd,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+      ),
+    );
   }
 }

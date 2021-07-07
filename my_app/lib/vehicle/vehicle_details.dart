@@ -26,6 +26,7 @@ class VehicleDetails extends StatefulWidget {
 class _VehicleDetailsState extends State<VehicleDetails> {
   final _priceController = TextEditingController();
   DateTime dateTime = DateTime.now();
+  DateTime rentalEnd = DateTime.now();
   var vehicle;
   User _user;
   UserInformation _userInformationOwner;
@@ -64,6 +65,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
               buildRatingInformation(vehicle.vehicle.userId),
               buildInputField("Price", _priceController),
               buildRentalStart(),
+              buildRentalEnd(),
               buildRentalButton()
             ],
           ),
@@ -194,6 +196,62 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     );
   }
 
+  buildRentalEnd() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [buildText("Rental end date")],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  DateFormat('dd.MM.yyyy').format(rentalEnd),
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  color: Colors.white,
+                  child: Icon(Icons.date_range),
+                  onPressed: () async {
+                    DateTime newDateTime = await showRoundedDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(DateTime.now().year - 1),
+                      lastDate: DateTime(DateTime.now().year + 1),
+                      borderRadius: 2,
+                    );
+                    if (newDateTime != null) {
+                      setState(() => rentalEnd = newDateTime);
+                    }
+                  },
+                )
+              ],
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
   Container buildText(text) {
     return Container(
       padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
@@ -271,6 +329,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     Rental rental = new Rental();
 
     rental.rentalStart = DateFormat('dd.MM.yyyy').format(dateTime);
+    rental.rentalEnd = DateFormat('dd.MM.yyyy').format(rentalEnd);
     rental.ownerId = vehicle.vehicle.userId;
     rental.renterId = _user.uid;
     rental.renterName = _userInformationRenter.nickname;

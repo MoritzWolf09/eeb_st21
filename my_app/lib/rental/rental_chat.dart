@@ -176,6 +176,7 @@ class _RentalChatState extends State<RentalChat> {
     rental.ownerId = element['ownerId'];
     rental.ownerName = element['ownerName'];
     rental.rentalStart = element['rentalStart'];
+    rental.rentalEnd = element['rentalEnd'];
     rental.rentalId = element.id;
     rental.status = element['status'];
     rental.rentalType = type;
