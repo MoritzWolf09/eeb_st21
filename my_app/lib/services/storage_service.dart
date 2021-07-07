@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class StorageService {
 
+  // Gets Avatar URL for the userId form Firebase Storage
   Future<String> getAvatarUrl(userId) async {
     String downloadURL = await FirebaseStorage.instance
         .ref('users/' + userId + '.png')

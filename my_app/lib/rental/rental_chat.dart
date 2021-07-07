@@ -107,7 +107,7 @@ class _RentalChatState extends State<RentalChat> {
               child: GroupedListView<dynamic, String>(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                elements: convertResultToRental(result.data, "Rental requests"),
+                elements: convertResultToRental(result.data, "Requests for your vehicles"),
                 groupBy: (element) => element.rentalType,
                 groupComparator: (value1, value2) => value2.compareTo(value1),
                 itemComparator: (item1, item2) =>

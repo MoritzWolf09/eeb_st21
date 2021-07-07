@@ -27,6 +27,7 @@ class _AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
+    // Save User ID from session
     _userId = context.watch<User>().uid;
 
     return CustomScrollView(
@@ -34,7 +35,7 @@ class _AccountState extends State<Account> {
       slivers: <Widget>[
         SliverList(
             delegate: SliverChildListDelegate([
-          buildSummary(context),
+          buildAccountSummary(context),
           buildLogoutButton(context),
           buildListHeader(context),
           buildVehicleList(context),
@@ -43,7 +44,7 @@ class _AccountState extends State<Account> {
     );
   }
 
-  Row buildSummary(BuildContext context) {
+  Row buildAccountSummary(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
